@@ -121,6 +121,19 @@ public class Sample7Task {
 //         TODO:
 //        enter date '4 of July 2007' using calendar widget
 //        check that correct date is added
+        WebElement datePicker = driver.findElement(By.id("vfb-8"));
+        datePicker.click();
+        WebElement calWidget = driver.findElement(By.id("ui-datepicker-div"));
+        WebElement calBack = calWidget.findElement(By.className("ui-datepicker-prev"));
+        WebElement calMonth = calWidget.findElement(By.className("ui-datepicker-month"));
+        WebElement calYear = calWidget.findElement(By.className("ui-datepicker-year"));
+        while (!((calMonth.getText() == "2007") && (calYear.getText() == "July"))) {
+            calBack.click();
+            Thread.sleep(100);
+            calBack = calWidget.findElement(By.className("ui-datepicker-prev"));
+            calMonth = calWidget.findElement(By.className("ui-datepicker-month"));
+            calYear = calWidget.findElement(By.className("ui-datepicker-year"));
+        }
     }
 
     @Test
