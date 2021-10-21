@@ -6,10 +6,7 @@ import org.junit.Test;
 import org.openqa.selenium.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
 
@@ -66,55 +63,65 @@ public class Task1 {
 //        BUG: if I enter number 666 no errors where seen
 //        TODO
 //        enter number which is too big (above 100), check that correct error is seen
-        WebElement number = driver.findElement(By.id("numb"));
-        String inputNumberBig = "500";
-        number.sendKeys(inputNumberBig);
-        driver.findElement(By.xpath("/html/body/div[2]/div/div/div[2]/button")).click();
-        String errorNumberBig = driver.findElement(By.id("ch1_error")).getText();
-        String expected = "Number is too big";
-        assertEquals(expected, errorNumberBig);
-        number.clear();
-        String inputNumber666 = "666";
-        number.sendKeys(inputNumber666);
-        driver.findElement(By.xpath("/html/body/div[2]/div/div/div[2]/button")).click();
-        String errorNumber666 = driver.findElement(By.id("ch1_error")).getText();
-        String expected1 = "Number is too big";
+        WebElement inputBox = driver.findElement(By.cssSelector("#numb"));
+        inputBox.clear();
+        inputBox.sendKeys("666");
+
+        WebElement submitBtn = driver.findElement(By.xpath("//button[@onclick='numberValidation()']"));
+        submitBtn.click();
+
+        WebElement errorMessage = driver.findElement(By.cssSelector("#ch1_error"));
+        String expectedErrorTxt = "Number is too big";
+
         try {
-            assertEquals(expected1, errorNumber666);
+            assertEquals(expectedErrorTxt, errorMessage.getText());
         } catch (AssertionError e) {
-            System.err.println("We failed ");
+            System.out.println("\"Number is too big\" error message should be displayed");
             e.printStackTrace();
         }
 
-//       @Test
-//        public void correctSquareRootWithoutRemainder() {
-////        TODO
-////        enter a number between 50 and 100 digit in the input (square root of which doesn't have a remainder, e.g. 2 is square root of 4),
-////        then and press submit and check that correct no error is seen and check that square root is calculated correctly
-        WebElement txt1 = driver.findElement(By.id("numb"));
-        txt1.sendKeys("64");
-        WebElement btn = driver.findElement(By.className("w3-orange"));
-        btn.click();
-        Alert alert = driver.switchTo().alert();
-        assertEquals("Square root of 64 is 8.00", alert.getText());
-        alert.accept();
+        inputBox.clear();
+        inputBox.sendKeys("150");
+        submitBtn.click();
+        assertEquals(expectedErrorTxt, errorMessage.getText());
     }
 
+    @Test
+    public void correctSquareRootWithoutRemainder() {
+//        TODO
+//        enter a number between 50 and 100 digit in the input (square root of which doesn't have a remainder, e.g. 2 is square root of 4),
+//        then and press submit and check that correct no error is seen and check that square root is calculated correctly
+        WebElement inputBox = driver.findElement(By.cssSelector("#numb"));
+        inputBox.clear();
+        inputBox.sendKeys("81");
 
-        @Test
+        WebElement submitBtn = driver.findElement(By.xpath("//button[@onclick='numberValidation()']"));
+        submitBtn.click();
 
-        public void correctSquareRootWithRemainder() {
+        Alert alert = driver.switchTo().alert();
+        String alertTxt = "Square root of 81 is 9.00";
+        assertEquals(alertTxt, alert.getText());
+        alert.accept();
+
+
+        WebElement errorMessage = driver.findElement(By.cssSelector("#ch1_error"));
+        assertFalse(errorMessage.isDisplayed());
+
+    }
+
+    @Test
+    public void correctSquareRootWithRemainder() {
 //        TODO
 //        enter a number between 50 and 100 digit in the input (square root of which doesn't have a remainder, e.g. 1.732.. is square root of 3) and press submit,
 //        then check that correct no error is seen and check that square root is calculated correctly
-            WebElement txt1 = driver.findElement(By.id("numb"));
-            txt1.sendKeys("67");
-            WebElement btn = driver.findElement(By.className("w3-orange"));
-            btn.click();
-            Alert alert = driver.switchTo().alert();
-            assertEquals("Square root of 67 is 8.19", alert.getText());
-            alert.accept();
-        }
+        WebElement txt1 = driver.findElement(By.id("numb"));
+        txt1.sendKeys("67");
+        WebElement btn = driver.findElement(By.className("w3-orange"));
+        btn.click();
+        Alert alert = driver.switchTo().alert();
+        assertEquals("Square root of 67 is 8.19", alert.getText());
+        alert.accept();
     }
+}
 
 
